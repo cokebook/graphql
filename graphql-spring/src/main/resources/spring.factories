@@ -1,0 +1,3 @@
+
+# Auto configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.cokebook.graphql.spring.GraphQlAutoConfiguration
