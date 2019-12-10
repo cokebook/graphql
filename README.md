@@ -53,3 +53,20 @@
 
 
     ```
+   
+   
+### 实现说明
+
+> 项目基于 spring-boot 1.5.X 版本构建, 由于 spring-boot 2.X.Y 版本中 `SpringApplicationRunListener` 接口存在调整 : SO 该工具暂不支持 2.X.Y版本,
+> 你可以重新调整依赖包并调整  GraphQlRunListener 类实现使其支持 spring-boot 2.X.Y 版本
+   
+- 1 基于 SpringApplicationRunListener 接口在尽量早的时间点向 `applicationContext` 中注入特定的 BeanFactoryPostProcessor
+
+- 2 通过自定义的 BeanFactoryPostProcessor 直接向 BeanFactory 中注入 特定的 BeanPostProcessor 
+
+- 3 通过自定义的 BeanFactoryPostProcessor 直接向 BeanFactory 中注入特定类型的可解析依赖对象
+
+
+> 整个逻辑绕过了常规的先定义 Bean 再创建Bean 的形式构建特定的BeanPostProcessor, 原因在于一单Bean开始创建先后顺序就很难控制.
+   
+   

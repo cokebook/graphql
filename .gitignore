@@ -4,3 +4,5 @@
 target
 log
 */target
+graphql-example/build/
+*/build
