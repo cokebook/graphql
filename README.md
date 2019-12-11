@@ -1,72 +1,103 @@
-# graphql-spring
+# GraphQL : GraphQL Spring Plugin
 
-> 本项目的目的在于为常规的基于 spring boot 的 http web 服务提供便捷 Graphql 支持！
-> 项目的作用是在常规的四层OR三层系统  和 GraphQl 应用结构之间搭建一座桥梁 是各开发可以与最小实现对 GraphQL 的兼容
-
-
-### 项目操作指南
-
-- 1 执行 graphql-example 项目中的 Bootstrap 类 : 启动应用
-
-- 2 执行以下请求观察响应 
-
-    ```bash
-  
-        curl -X POST \
-          http://localhost:8080/graphql/query \
-          -H 'cache-control: no-cache' \
-          -H 'content-type: application/json' \
-          -H 'postman-token: 9314c65e-e333-e5cb-8693-7f39fd381856' \
-          -d '{
-        	
-        	book(id:"book-1") {
-        		id
-        		name
-        		author {
-        			firstName
-        		}
-        		
-        	}
-        	
-        }'
+    本项目是 GraphQL 的 spring 扩展应用, 其旨在为常规的 spring mvc OR  spring boot 项目提供快捷的 GraphQL 支持.
 
 
-    ```
-  
- - 3 结果如下说明应用正常
- 
-    ```json
-   
-   {
-     "code": 0,
-     "message": null,
-     "data": {
-       "book": {
-         "id": "book-1",
-         "name": "Harry Potter and the Philosopher's Stone",
-         "author": {
-           "firstName": "Joanne"
-         }
-       }
-     }
-   }
+
+## 使用说明
+
+- 1 引入 `graphql-spring`  依赖
+
+- 2 创建你的GraphQL 查询入口 Controller. EXAMPLE :
+
+```java
+
+@RestController
+@RequestMapping("graphql")
+public class GraphQLController {
+
+    private static final Logger log = LoggerFactory.getLogger(GraphQLController.class);
+
+    @Autowired
+    private GraphQL graphQL;
+
+    @PostMapping("/query")
+    public WebApi.Response query(@RequestBody String query) {
+        ExecutionResult result = graphQL.execute(query);
+        if (result.getErrors().isEmpty()) {
+            return WebApi.success(result.getData());
+        }
+        log.error("there is some error on request! query = {}, result = {}", query, result);
+        return WebApi.error("query failed, please check you query or contact to admin!");
+    }
+
+}
+
+```
+
+- 3 声明 Bean 的某些方位为 TypeWiring.  EXAMPLE:
+
+```java
+
+@Service
+public class BookService {
+
+    @Autowired
+    private AuthorService authorService;
+
+    private static List<Book> books = Arrays.asList(
+            new Book("book-1", "Harry Potter and the Philosopher's Stone", "223", "author-1"),
+            new Book("book-2", "Roma", "30", "author-2"),
+            new Book("book-3", "TLP", "10", "author-2"),
+            new Book("book-4", "BUSHI", "12", "author-3")
+    );
+
+    @TypeWiring(field = "book")
+    public Book findById(@Param("id") String id) {
+        return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @TypeWiring(type = "Book", field = "author")
+    public Author findByBook(Book book) {
+        return authorService.findAuthorById(book.getAuthorId());
+    }
+}
+
+```
+
+- 4 启动应用, 使用命令查询
+
+```bash
+    curl -X POST \
+      http://localhost:8080/graphql/query \
+      -H 'cache-control: no-cache' \
+      -H 'content-type: application/json' \
+      -H 'postman-token: 9314c65e-e333-e5cb-8693-7f39fd381856' \
+      -d '{
+        
+        book(id:"book-1") {
+            id
+            name
+            author {
+                firstName
+            }
+            
+        }
+        
+    }'
+```
 
 
-    ```
-   
-   
-### 实现说明
+## Example 
 
-> 项目基于 spring-boot 1.5.X 版本构建, 由于 spring-boot 2.X.Y 版本中 `SpringApplicationRunListener` 接口存在调整 : SO 该工具暂不支持 2.X.Y版本,
-> 你可以重新调整依赖包并调整  GraphQlRunListener 类实现使其支持 spring-boot 2.X.Y 版本
-   
-- 1 基于 SpringApplicationRunListener 接口在尽量早的时间点向 `applicationContext` 中注入特定的 BeanFactoryPostProcessor
+    你可以直接下载本项目运行 graphql-example 模块演示系统结果作为学习素材.
+    
+## 参考文档
 
-- 2 通过自定义的 BeanFactoryPostProcessor 直接向 BeanFactory 中注入 特定的 BeanPostProcessor 
+- [GraphQL Java 文档](https://graphql.cn/code/#java)
+- [GraphQL Spring Boot Project Example](https://www.graphql-java.com/tutorials/getting-started-with-spring-boot/)
+- [Graphql-java Github Project](https://github.com/graphql-java/graphql-java)
 
-- 3 通过自定义的 BeanFactoryPostProcessor 直接向 BeanFactory 中注入特定类型的可解析依赖对象
+## 特别说明
 
-
-> 整个逻辑绕过了常规的先定义 Bean 再创建Bean 的形式构建特定的BeanPostProcessor, 原因在于一单Bean开始创建先后顺序就很难控制.
-   
-   
+- 由于 spring-boot 1.x 和 2.x 版本之间部分接口被调整, 而当前项目基于 1.x 版本构建, 所有如果你想支持 2.x 版本 则你需要调整一些 [GraphQlRunListener](graphql-spring/src/java/org/cokebook/graphql/spring/GraphQlRunListener.java) 类.
