@@ -4,7 +4,7 @@
 
 
 
-## 使用说明
+## 1 使用说明
 
 - 1 引入 `graphql-spring`  依赖
 
@@ -88,16 +88,16 @@ public class BookService {
 ```
 
 
-## Example 
+## 2 Example 
 
     你可以直接下载本项目运行 graphql-example 模块演示系统结果作为学习素材.
     
-## 参考文档
+## 3 参考文档
 
 - [GraphQL Java 文档](https://graphql.cn/code/#java)
 - [GraphQL Spring Boot Project Example](https://www.graphql-java.com/tutorials/getting-started-with-spring-boot/)
 - [Graphql-java Github Project](https://github.com/graphql-java/graphql-java)
 
-## 特别说明
+## 4 特别说明
 
 - 由于 spring-boot 1.x 和 2.x 版本之间部分接口被调整, 而当前项目基于 1.x 版本构建, 所有如果你想支持 2.x 版本 则你需要调整一些 [GraphQlRunListener](graphql-spring/src/java/org/cokebook/graphql/spring/GraphQlRunListener.java) 类.
