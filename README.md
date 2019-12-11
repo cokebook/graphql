@@ -8,7 +8,7 @@
 
 - 1 引入 `graphql-spring`  依赖
 
-- 2 创建你的GraphQL 查询入口 Controller. EXAMPLE :
+- 2 创建你的GraphQL 查询入口 :
 
 ```java
 
@@ -35,7 +35,7 @@ public class GraphQLController {
 
 ```
 
-- 3 声明 Bean 的某些方位为 TypeWiring.  EXAMPLE:
+- 3 声明 Bean 的方法为TypeWiring :
 
 ```java
 
@@ -65,7 +65,7 @@ public class BookService {
 
 ```
 
-- 4 启动应用, 使用命令查询
+- 4 启动应用, 使用命令查询 :
 
 ```bash
     curl -X POST \
