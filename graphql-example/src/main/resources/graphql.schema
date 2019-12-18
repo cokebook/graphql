@@ -1,5 +1,9 @@
 type Query  {
   book(id: ID): Book
+  books : [Book]
+  findBooksByNames(names: [String!]!) : [Book]
+  findBooksByNames2(names: [String!]!) : [Book]
+
 }
 
 type Book {

@@ -1,7 +1,7 @@
 package org.cokebook.graphql.service;
 
 
-import org.cokebook.graphql.Param;
+import org.cokebook.graphql.JSON;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.entity.Author;
 import org.cokebook.graphql.entity.Book;
@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @date 2019/11/28 17:32
@@ -28,12 +31,42 @@ public class BookService {
     );
 
     @TypeWiring(field = "book")
-    public Book findById(@Param("id") String id) {
+    public Book findById(String id) {
         return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @TypeWiring(field = "books")
+    public List<Book> findAllBook() {
+        return books;
+    }
+
+    @TypeWiring(field = "findBooksByNames")
+    public List<Book> findBook(@JSON BookQueryParam param) {
+        Set<String> names = new HashSet<>(Arrays.asList(param.names));
+        return books.stream().filter(book -> names.contains(book.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @TypeWiring(field = "findBooksByNames2")
+    public List<Book> findBookByNames(List<String> names) {
+        return books.stream().filter(book -> names.contains(book.getName()))
+                .collect(Collectors.toList());
     }
 
     @TypeWiring(type = "Book", field = "author")
     public Author findByBook(Book book) {
         return authorService.findAuthorById(book.getAuthorId());
+    }
+
+    public static class BookQueryParam {
+        private String[] names;
+
+        public String[] getNames() {
+            return names;
+        }
+
+        public void setNames(String[] names) {
+            this.names = names;
+        }
     }
 }

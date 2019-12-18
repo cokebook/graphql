@@ -7,16 +7,12 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.*;
-import org.cokebook.graphql.TypeWiring;
-import org.cokebook.graphql.TypeWiringKeeper;
-import org.cokebook.graphql.util.MethodParamHelper;
+import org.cokebook.graphql.*;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import javax.print.DocFlavor;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -82,9 +78,9 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQL>, ApplicationCont
                                 public Object get(DataFetchingEnvironment environment) throws Exception {
                                     Object bean = applicationContext.getBean(beanName);
                                     if (TypeWiring.DEFAULT_TYPE.equals(typeWiring.type())) {
-                                        final List<String> pNames = MethodParamHelper.getParamNames(method);
-                                        final List<Object> pValues = pNames.stream().map(name -> {
-                                            return environment.getArgument(name);
+                                        final List<MethodParameter> parameters = MethodParameterHelper.getParams(method);
+                                        final List<Object> pValues = parameters.stream().map(parameter -> {
+                                            return ArgumentResolvers.parse(environment.getArguments(), parameter);
                                         }).collect(Collectors.toList());
                                         return method.invoke(bean, pValues.toArray(new Object[pValues.size()]));
                                     }
