@@ -1,6 +1,7 @@
 package org.cokebook.graphql;
 
 import com.alibaba.fastjson.JSONObject;
+import org.cokebook.graphql.common.MethodParameter;
 import org.cokebook.graphql.convert.*;
 
 import java.math.BigDecimal;
