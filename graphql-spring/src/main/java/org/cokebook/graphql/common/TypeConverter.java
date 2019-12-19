@@ -1,4 +1,4 @@
-package org.cokebook.graphql;
+package org.cokebook.graphql.common;
 
 /**
  * 数值转换器

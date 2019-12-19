@@ -1,4 +1,4 @@
-package org.cokebook.graphql;
+package org.cokebook.graphql.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

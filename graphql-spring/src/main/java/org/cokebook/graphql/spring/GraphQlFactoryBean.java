@@ -8,6 +8,7 @@ import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.*;
 import org.cokebook.graphql.*;
+import org.cokebook.graphql.common.ArgumentResolvers;
 import org.cokebook.graphql.common.MethodParameter;
 import org.cokebook.graphql.common.MethodParameterHelper;
 import org.springframework.beans.BeansException;

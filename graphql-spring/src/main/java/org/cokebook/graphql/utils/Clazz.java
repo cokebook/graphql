@@ -1,4 +1,4 @@
-package org.cokebook.graphql.common.utils;
+package org.cokebook.graphql.utils;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,6 +1,5 @@
 package org.cokebook.graphql.common;
 
-import org.cokebook.graphql.Param;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 

@@ -1,6 +1,6 @@
 package org.cokebook.graphql.converter;
 
-import org.cokebook.graphql.TypeConverter;
+import org.cokebook.graphql.common.TypeConverter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

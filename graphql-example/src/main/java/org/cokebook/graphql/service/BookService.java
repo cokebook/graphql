@@ -1,7 +1,7 @@
 package org.cokebook.graphql.service;
 
 
-import org.cokebook.graphql.JSON;
+import org.cokebook.graphql.common.JSON;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.entity.Author;
 import org.cokebook.graphql.entity.Book;

@@ -1,6 +1,6 @@
 package org.cokebook.graphql.converter;
 
-import org.cokebook.graphql.TypeConverter;
+import org.cokebook.graphql.common.TypeConverter;
 
 /**
  * @date 2019/12/18 17:49
