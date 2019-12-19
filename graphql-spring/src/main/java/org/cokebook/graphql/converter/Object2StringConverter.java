@@ -1,4 +1,4 @@
-package org.cokebook.graphql.convert;
+package org.cokebook.graphql.converter;
 
 import org.cokebook.graphql.TypeConverter;
 

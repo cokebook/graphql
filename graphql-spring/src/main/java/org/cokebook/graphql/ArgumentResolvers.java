@@ -2,7 +2,7 @@ package org.cokebook.graphql;
 
 import com.alibaba.fastjson.JSONObject;
 import org.cokebook.graphql.common.MethodParameter;
-import org.cokebook.graphql.convert.*;
+import org.cokebook.graphql.converter.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
