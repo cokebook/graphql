@@ -36,7 +36,7 @@ public class ArgumentResolvers {
         if (typeConverter != null) {
             return typeConverter.convert(pValue);
         }
-        throw new UnsupportedTypeConvertException(pValue.getClass(), parameter.getType(), pValue);
+        return pValue;
     }
 
 
