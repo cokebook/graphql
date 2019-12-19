@@ -129,23 +129,23 @@ public class ArgumentResolvers {
 
         register(String.class, BigDecimal.class, new String2BigDecimalConverter());
 
-        register(Boolean.class, String.class, new SimpleObject2StringConverter());
-        register(Byte.class, String.class, new SimpleObject2StringConverter());
-        register(Short.class, String.class, new SimpleObject2StringConverter());
-        register(Integer.class, String.class, new SimpleObject2StringConverter());
-        register(Long.class, String.class, new SimpleObject2StringConverter());
-        register(Float.class, String.class, new SimpleObject2StringConverter());
-        register(Double.class, String.class, new SimpleObject2StringConverter());
-        register(Character.class, String.class, new SimpleObject2StringConverter());
+        register(Boolean.class, String.class, new Object2StringConverter());
+        register(Byte.class, String.class, new Object2StringConverter());
+        register(Short.class, String.class, new Object2StringConverter());
+        register(Integer.class, String.class, new Object2StringConverter());
+        register(Long.class, String.class, new Object2StringConverter());
+        register(Float.class, String.class, new Object2StringConverter());
+        register(Double.class, String.class, new Object2StringConverter());
+        register(Character.class, String.class, new Object2StringConverter());
 
-        register(boolean.class, String.class, new SimpleObject2StringConverter());
-        register(byte.class, String.class, new SimpleObject2StringConverter());
-        register(short.class, String.class, new SimpleObject2StringConverter());
-        register(int.class, String.class, new SimpleObject2StringConverter());
-        register(long.class, String.class, new SimpleObject2StringConverter());
-        register(float.class, String.class, new SimpleObject2StringConverter());
-        register(double.class, String.class, new SimpleObject2StringConverter());
-        register(char.class, String.class, new SimpleObject2StringConverter<>());
+        register(boolean.class, String.class, new Object2StringConverter());
+        register(byte.class, String.class, new Object2StringConverter());
+        register(short.class, String.class, new Object2StringConverter());
+        register(int.class, String.class, new Object2StringConverter());
+        register(long.class, String.class, new Object2StringConverter());
+        register(float.class, String.class, new Object2StringConverter());
+        register(double.class, String.class, new Object2StringConverter());
+        register(char.class, String.class, new Object2StringConverter<>());
 
         register(String[].class, boolean[].class, new StringArray2booleanArrayConverter());
         register(String[].class, byte[].class, new StringArray2byteArrayConverter());

@@ -5,7 +5,7 @@ import org.cokebook.graphql.TypeConverter;
 /**
  * @date 2019/12/18 18:19
  */
-public class SimpleObject2StringConverter<T extends Object> implements TypeConverter<T, String> {
+public class Object2StringConverter<T extends Object> implements TypeConverter<T, String> {
 
     @Override
     public String convert(Object value) {
