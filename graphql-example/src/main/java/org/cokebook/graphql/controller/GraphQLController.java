@@ -1,12 +1,14 @@
 package org.cokebook.graphql.controller;
 
 import graphql.ExecutionResult;
-import graphql.GraphQL;
+import graphql.GraphQLError;
+import org.cokebook.graphql.GraphQLAdapter;
 import org.cokebook.web.utils.WebApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("graphql")
@@ -15,7 +17,7 @@ public class GraphQLController {
     private static final Logger log = LoggerFactory.getLogger(GraphQLController.class);
 
     @Autowired
-    private GraphQL graphQL;
+    private GraphQLAdapter graphQL;
 
 
     @GetMapping("/index")
@@ -26,16 +28,16 @@ public class GraphQLController {
     @PostMapping("/query")
     public WebApi.Response query(@RequestBody String query) {
         ExecutionResult result = graphQL.execute(query);
-        if (result.getErrors().isEmpty()) {
-            return WebApi.success(result.getData());
+        if (!result.getErrors().isEmpty()) {
+            log.info("graphQL query errors = {}", result.getErrors());
+            final StringBuilder errors = new StringBuilder();
+            for (GraphQLError error : result.getErrors()) {
+                errors.append(error.getMessage());
+                errors.append(",");
+            }
+            return WebApi.error(errors.substring(0, errors.length() - 1));
         }
-        log.error("there is some error on request! query = {}, result = {}", query, result);
-        return WebApi.error("query failed, please check you query or contact to admin!");
-    }
-
-    @GetMapping("test")
-    public WebApi.Response<String> test(String test) {
-        return WebApi.success(test);
+        return WebApi.success(result.getData());
     }
 
 }

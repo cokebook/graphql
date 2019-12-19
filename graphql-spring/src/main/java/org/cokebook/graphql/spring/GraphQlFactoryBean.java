@@ -2,12 +2,15 @@ package org.cokebook.graphql.spring;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.*;
-import org.cokebook.graphql.*;
+import org.cokebook.graphql.GraphQLAdapter;
+import org.cokebook.graphql.TypeWiring;
+import org.cokebook.graphql.TypeWiringKeeper;
 import org.cokebook.graphql.common.ArgumentResolvers;
 import org.cokebook.graphql.common.MethodParameter;
 import org.cokebook.graphql.common.MethodParameterHelper;
@@ -15,6 +18,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -22,9 +27,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GraphQlFactoryBean implements FactoryBean<GraphQL>, ApplicationContextAware {
+public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, ApplicationContextAware {
 
-    public static final String SCHEMA_LOCATION = "graphql.schema";
+    public static final String SCHEMA_LOCATION = "classpath:graphql.schema";
 
     /**
      * schema file location
@@ -43,9 +48,9 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQL>, ApplicationCont
     }
 
     @Override
-    public GraphQL getObject() throws Exception {
+    public GraphQLAdapter getObject() throws Exception {
         GraphQLSchema schema = new SchemaGenerator().makeExecutableSchema(getTypeDefinitionRegistry(), getRuntimeWiring());
-        return GraphQL.newGraphQL(schema).build();
+        return new SimpleGraphQLAdapter(GraphQL.newGraphQL(schema).build());
     }
 
     @Override
@@ -65,7 +70,9 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQL>, ApplicationCont
 
     private TypeDefinitionRegistry getTypeDefinitionRegistry() throws IOException {
         final String targetLocation = this.location == null ? SCHEMA_LOCATION : this.location;
-        final String sdl = resourceToString(Resources.getResource(targetLocation));
+        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        Resource resource = resourcePatternResolver.getResource(targetLocation);
+        final String sdl = resourceToString(resource.getURL());
         return new SchemaParser().parse(sdl);
     }
 
@@ -103,6 +110,20 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQL>, ApplicationCont
 
     private static String resourceToString(URL resource) throws IOException {
         return Resources.toString(resource, Charsets.UTF_8);
+    }
+
+    public static class SimpleGraphQLAdapter implements GraphQLAdapter {
+
+        private GraphQL graphQL;
+
+        public SimpleGraphQLAdapter(GraphQL graphQL) {
+            this.graphQL = graphQL;
+        }
+
+        @Override
+        public ExecutionResult execute(String query) {
+            return graphQL.execute(query);
+        }
     }
 
 

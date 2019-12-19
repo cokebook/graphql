@@ -19,7 +19,7 @@ public class GraphQLController {
     private static final Logger log = LoggerFactory.getLogger(GraphQLController.class);
 
     @Autowired
-    private GraphQL graphQL;
+    private GraphQLAdapter graphQL;
 
     @PostMapping("/query")
     public WebApi.Response query(@RequestBody String query) {
