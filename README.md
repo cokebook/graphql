@@ -24,11 +24,16 @@ public class GraphQLController {
     @PostMapping("/query")
     public WebApi.Response query(@RequestBody String query) {
         ExecutionResult result = graphQL.execute(query);
-        if (result.getErrors().isEmpty()) {
-            return WebApi.success(result.getData());
+        if (!result.getErrors().isEmpty()) {
+            log.info("graphQL query errors = {}", result.getErrors());
+            final StringBuilder errors = new StringBuilder();
+            for (GraphQLError error : result.getErrors()) {
+                errors.append(error.getMessage());
+                errors.append(",");
+            }
+            return WebApi.error(errors.substring(0, errors.length() - 1));
         }
-        log.error("there is some error on request! query = {}, result = {}", query, result);
-        return WebApi.error("query failed, please check you query or contact to admin!");
+        return WebApi.success(result.getData());
     }
 
 }
