@@ -8,6 +8,8 @@
 
 - 1 引入 `graphql-spring`  依赖
 
+    > 本项目暂时没有MVN 中央仓库JAR, 你可以克隆本项目在本地运行打包!
+
 - 2 创建你的GraphQL 查询入口 :
 
 ```java
@@ -77,21 +79,31 @@ public class BookService {
       http://localhost:8080/graphql/query \
       -H 'cache-control: no-cache' \
       -H 'content-type: application/json' \
-      -H 'postman-token: 9314c65e-e333-e5cb-8693-7f39fd381856' \
+      -H 'postman-token: d3cef612-06b1-b0c3-caef-31639d1f8dc5' \
       -d '{
-        
-        book(id:"book-1") {
-            id
-            name
-            author {
-                firstName
-            }
-            
-        }
-        
+    	
+    	book(id:"book-1") {
+    		id
+    		name
+    	}
+    	
     }'
 ```
 
+- 5 结果演示
+
+```json
+    {
+      "code": 0,
+      "message": null,
+      "data": {
+        "book": {
+          "id": "book-1",
+          "name": "Harry Potter and the Philosopher's Stone"
+        }
+      }
+    }
+```
 
 ## 2 Example 
 
