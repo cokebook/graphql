@@ -2,6 +2,7 @@ package org.cokebook.graphql;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The Type Wiring Keeper
@@ -9,11 +10,10 @@ import java.util.Map;
  * @date 2019/11/29 14:56
  */
 public interface TypeWiringKeeper {
-
     /**
-     * Type Wiring Methods
+     * Get the dataFetchers of {@link TypeWiringDataFetcher}
      *
      * @return
      */
-    Map<Method, String> typeWiringMethods();
+    Set<TypeWiringDataFetcher> dataFetchers();
 }

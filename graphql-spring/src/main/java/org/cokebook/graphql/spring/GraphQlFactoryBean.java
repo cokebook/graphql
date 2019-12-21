@@ -78,13 +78,10 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, Applicat
     }
 
     private RuntimeWiring getRuntimeWiring() {
-        List<TypeRuntimeWiring.Builder> builders = typeWiringKeeper.typeWiringMethods().entrySet().stream()
-                .map(entry -> {
-                    TypeWiringDataFetcher fetcher = new BeanMethodDataFetcher(applicationContext, entry.getValue(), entry.getKey());
-                    return TypeRuntimeWiring.newTypeWiring(fetcher.getType())
-                            .dataFetcher(fetcher.getField(), fetcher);
-                }).collect(Collectors.toList());
-
+        List<TypeRuntimeWiring.Builder> builders = typeWiringKeeper.dataFetchers().stream()
+                .map(fetcher -> TypeRuntimeWiring.newTypeWiring(fetcher.getType())
+                        .dataFetcher(fetcher.getField(), fetcher)
+                ).collect(Collectors.toList());
         final RuntimeWiring.Builder runtimeWiringBuilder = RuntimeWiring.newRuntimeWiring();
         for (TypeRuntimeWiring.Builder builder : builders) {
             runtimeWiringBuilder.type(builder);
