@@ -10,6 +10,7 @@ import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.*;
 import org.cokebook.graphql.GraphQLAdapter;
 import org.cokebook.graphql.TypeWiring;
+import org.cokebook.graphql.TypeWiringDataFetcher;
 import org.cokebook.graphql.TypeWiringKeeper;
 import org.cokebook.graphql.common.ArgumentResolvers;
 import org.cokebook.graphql.common.MethodParameter;
@@ -79,24 +80,9 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, Applicat
     private RuntimeWiring getRuntimeWiring() {
         List<TypeRuntimeWiring.Builder> builders = typeWiringKeeper.typeWiringMethods().entrySet().stream()
                 .map(entry -> {
-                    Method method = entry.getKey();
-                    String beanName = entry.getValue();
-                    TypeWiring typeWiring = method.getAnnotation(TypeWiring.class);
-                    return TypeRuntimeWiring.newTypeWiring(typeWiring.type())
-                            .dataFetcher(typeWiring.field(), new DataFetcher() {
-                                @Override
-                                public Object get(DataFetchingEnvironment environment) throws Exception {
-                                    Object bean = applicationContext.getBean(beanName);
-                                    if (TypeWiring.DEFAULT_TYPE.equals(typeWiring.type())) {
-                                        final List<MethodParameter> parameters = MethodParameterHelper.getParams(method);
-                                        final List<Object> pValues = parameters.stream().map(parameter -> {
-                                            return ArgumentResolvers.parse(environment.getArguments(), parameter);
-                                        }).collect(Collectors.toList());
-                                        return method.invoke(bean, pValues.toArray(new Object[pValues.size()]));
-                                    }
-                                    return method.invoke(bean, (Object) environment.getSource());
-                                }
-                            });
+                    TypeWiringDataFetcher fetcher = new BeanMethodDataFetcher(applicationContext, entry.getValue(), entry.getKey());
+                    return TypeRuntimeWiring.newTypeWiring(fetcher.getType())
+                            .dataFetcher(fetcher.getField(), fetcher);
                 }).collect(Collectors.toList());
 
         final RuntimeWiring.Builder runtimeWiringBuilder = RuntimeWiring.newRuntimeWiring();
