@@ -107,7 +107,8 @@ public class BookService {
 
 ## 2 Example 
 
-    你可以直接下载本项目运行 graphql-example 模块演示系统结果作为学习素材.
+- 你可以直接下载本项目运行 graphql-example 模块演示系统结果作为学习素材. [点击跳转到样例](./graphql-example)
+    
     
 ## 3 参考文档
 
