@@ -3,7 +3,7 @@ type Query  {
   books : [Book]
   findBooksByNames(names: [String!]!) : [Book]
   findBooksByNames2(names: [String!]!) : [Book]
-
+  index : String
 }
 
 type Book {

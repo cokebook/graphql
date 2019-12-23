@@ -51,4 +51,8 @@ public class BeanMethodDataFetcher implements TypeWiringDataFetcher {
         }
         return method.invoke(bean, (Object) environment.getSource());
     }
+
+    public Method getMethod() {
+        return method;
+    }
 }
