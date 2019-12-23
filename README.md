@@ -108,7 +108,8 @@ public class BookService {
 ## 2 Example 
 
 - 你可以直接下载本项目运行 graphql-example 模块演示系统结果作为学习素材. [点击跳转到样例](./graphql-example)
-    
+
+- 如果你想使用非 @TypeWiring 注解声明 DataFetcher, 你可以使用常规 Spring bean 模式定义 DataFetcher [点击跳转到样例](./graphql-example/src/main/java/org/cokebook/graphql/fetcher/WelcomeDataFetcher.java)    
     
 ## 3 参考文档
 
