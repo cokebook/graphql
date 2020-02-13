@@ -2,19 +2,13 @@ package org.cokebook.graphql.spring;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
-import graphql.schema.DataFetcher;
-import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.*;
 import org.cokebook.graphql.GraphQLAdapter;
-import org.cokebook.graphql.TypeWiring;
-import org.cokebook.graphql.TypeWiringDataFetcher;
 import org.cokebook.graphql.TypeWiringKeeper;
-import org.cokebook.graphql.common.ArgumentResolvers;
-import org.cokebook.graphql.common.MethodParameter;
-import org.cokebook.graphql.common.MethodParameterHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
@@ -23,9 +17,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, ApplicationContextAware {
@@ -106,6 +100,14 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, Applicat
         @Override
         public ExecutionResult execute(String query) {
             return graphQL.execute(query);
+        }
+
+        @Override
+        public ExecutionResult execute(String query, Map<String, Object> variables) {
+            return graphQL.execute(ExecutionInput.newExecutionInput()
+                    .variables(variables)
+                    .query(query)
+                    .build());
         }
     }
 

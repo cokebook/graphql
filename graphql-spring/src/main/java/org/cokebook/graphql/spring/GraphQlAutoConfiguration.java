@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 /**
  * GraphQl Configuration for spring boot
  *
@@ -43,6 +45,12 @@ public class GraphQlAutoConfiguration {
         return new GraphQLAdapter() {
             @Override
             public ExecutionResult execute(String query) {
+                String location = applicationContext.getEnvironment().resolvePlaceholders(SCHEMA_FILE_PATH_VAR);
+                throw new GraphQLSchemaFileNotFoundedException(location);
+            }
+
+            @Override
+            public ExecutionResult execute(String query, Map<String, Object> variables) {
                 String location = applicationContext.getEnvironment().resolvePlaceholders(SCHEMA_FILE_PATH_VAR);
                 throw new GraphQLSchemaFileNotFoundedException(location);
             }
