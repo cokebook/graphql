@@ -4,6 +4,7 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.cokebook.graphql.GraphQLAdapter;
 import org.cokebook.graphql.TypeWiringKeeper;
+import org.cokebook.graphql.controller.GraphQlControllerRegister;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
@@ -11,6 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 
 import java.util.Map;
 
@@ -20,8 +23,8 @@ import java.util.Map;
  * @date 2019/11/28 16:56
  */
 @Configuration
-
 @ConditionalOnClass(GraphQL.class)
+@Import(GraphQlControllerRegister.GraphQlController.class)
 public class GraphQlAutoConfiguration {
 
     private static final String SCHEMA_FILE_PATH_VAR = "${spring.graphql.location:classpath:graphql.schema}";
@@ -33,6 +36,7 @@ public class GraphQlAutoConfiguration {
     }
 
     @Bean
+    @Primary
     @ConfigurationProperties("spring.graphql")
     @ConditionalOnResource(resources = SCHEMA_FILE_PATH_VAR)
     public GraphQlFactoryBean graphQlFactoryBean(TypeWiringKeeper typeWiringKeeper) {

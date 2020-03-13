@@ -50,7 +50,7 @@ public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, Applicat
 
     @Override
     public Class<?> getObjectType() {
-        return GraphQL.class;
+        return GraphQLAdapter.class;
     }
 
     @Override
