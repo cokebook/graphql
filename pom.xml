@@ -7,12 +7,32 @@
     <groupId>org.cokebook.graphql</groupId>
     <artifactId>graphql</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.3-SNAPSHOT</version>
     <modules>
         <module>graphql-spring</module>
         <module>graphql-example</module>
         <module>graphql-scalars</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.cokebook.graphql</groupId>
+                <artifactId>graphql-spring</artifactId>
+                <version>1.0.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.cokebook.graphql</groupId>
+                <artifactId>graphql-spring</artifactId>
+                <version>1.0.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.28</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
     <build>
@@ -24,6 +44,26 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
             </plugin>
         </plugins>
