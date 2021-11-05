@@ -29,11 +29,13 @@ public class BookService {
 
     @TypeWiring(field = "book")
     public Book findById(String id) {
+        System.out.println("test to print current-thread:" + Thread.currentThread().getName() + ": book");
         return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
     }
 
     @TypeWiring(field = "books")
     public List<Book> findAllBook() {
+        System.out.println("test to print current-thread:" + Thread.currentThread().getName() + ": book");
         return books;
     }
 
@@ -70,12 +72,12 @@ public class BookService {
     public static void main(String[] args) {
 
         Map<String, String> paramType = new HashMap<>();
-        paramType.put("assetId","long");
-        paramType.put("cardId","long");
+        paramType.put("assetId", "long");
+        paramType.put("cardId", "long");
 
         Map<String, Object> params = new HashMap<>();
-        params.put("cardId",100L);
-        params.put("assetId",100L);
+        params.put("cardId", 100L);
+        params.put("assetId", 100L);
 
 
         String BOOK_INFO = "assert(id:$id){\n" +
