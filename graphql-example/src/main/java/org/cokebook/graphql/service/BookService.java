@@ -1,0 +1,97 @@
+package org.cokebook.graphql.service;
+
+
+import org.cokebook.graphql.TypeWiring;
+import org.cokebook.graphql.common.JSON;
+import org.cokebook.graphql.entity.Author;
+import org.cokebook.graphql.entity.Book;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * @date 2019/11/28 17:32
+ */
+@Service
+public class BookService {
+
+    @Autowired
+    private AuthorService authorService;
+
+    private static List<Book> books = Arrays.asList(
+            new Book("book-1", "Harry Potter and the Philosopher's Stone", "223", "author-1"),
+            new Book("book-2", "Roma", "30", "author-2"),
+            new Book("book-3", "TLP", "10", "author-2"),
+            new Book("book-4", "BUSHI", "12", "author-3")
+    );
+
+    @TypeWiring(field = "book")
+    public Book findById(String id) {
+        return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @TypeWiring(field = "books")
+    public List<Book> findAllBook() {
+        return books;
+    }
+
+    @TypeWiring(field = "findBooksByNames")
+    public List<Book> findBook(@JSON BookQueryParam param) {
+        Set<String> names = new HashSet<>(Arrays.asList(param.names));
+        return books.stream().filter(book -> names.contains(book.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @TypeWiring(field = "findBooksByNames2")
+    public List<Book> findBookByNames(List<String> names) {
+        return books.stream().filter(book -> names.contains(book.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @TypeWiring(type = "Book", field = "author")
+    public Author findByBook(Book book) {
+        return authorService.findAuthorById(book.getAuthorId());
+    }
+
+    public static class BookQueryParam {
+        private String[] names;
+
+        public String[] getNames() {
+            return names;
+        }
+
+        public void setNames(String[] names) {
+            this.names = names;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Map<String, String> paramType = new HashMap<>();
+        paramType.put("assetId","long");
+        paramType.put("cardId","long");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("cardId",100L);
+        params.put("assetId",100L);
+
+
+        String BOOK_INFO = "assert(id:$id){\n" +
+                "        name\n" +
+                "        createTime\n" +
+                "    \n" +
+                "    }";
+        String BOOKS = "  card(id:$id) {\n" +
+                "            name\n" +
+                "        createTime\n" +
+                "    }\n";
+
+
+        String query = "query asset_card ($cardId:long, $asserttId:long) {" + BOOK_INFO + BOOKS + "}";
+
+        System.out.println(query);
+
+    }
+}

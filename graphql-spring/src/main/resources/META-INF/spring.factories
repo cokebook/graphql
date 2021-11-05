@@ -1,0 +1,6 @@
+
+# Auto configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.cokebook.graphql.spring.GraphQlAutoConfiguration
+
+# Spring Application Run Listener
+org.springframework.boot.SpringApplicationRunListener=org.cokebook.graphql.spring.GraphQlRunListener
