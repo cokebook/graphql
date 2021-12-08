@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.cokebook.graphql</groupId>
         <artifactId>graphql</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.4-SNASHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.cokebook.graphql</groupId>

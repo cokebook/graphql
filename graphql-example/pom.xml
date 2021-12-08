@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.cokebook.graphql</groupId>
             <artifactId>graphql-scalars</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>1.0.4-SNASHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

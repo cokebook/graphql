@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class GraphQlFactoryBean implements FactoryBean<GraphQLAdapter>, ApplicationContextAware {
 
-    public static final String SCHEMA_LOCATION = "classpath:graphql.schema";
+    public static final String SCHEMA_LOCATION = "classpath:schema.graphql";
 
     /**
      * schema file location

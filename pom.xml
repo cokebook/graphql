@@ -7,7 +7,7 @@
     <groupId>org.cokebook.graphql</groupId>
     <artifactId>graphql</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNASHOT</version>
     <modules>
         <module>graphql-spring</module>
         <module>graphql-example</module>
@@ -19,12 +19,12 @@
             <dependency>
                 <groupId>org.cokebook.graphql</groupId>
                 <artifactId>graphql-spring</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4-SNASHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.cokebook.graphql</groupId>
                 <artifactId>graphql-spring</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4-SNASHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

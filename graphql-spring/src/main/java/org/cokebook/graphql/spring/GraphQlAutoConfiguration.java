@@ -27,7 +27,7 @@ import java.util.Map;
 @Import(GraphQlControllerRegister.GraphQlController.class)
 public class GraphQlAutoConfiguration {
 
-    private static final String SCHEMA_FILE_PATH_VAR = "${spring.graphql.location:classpath:graphql.schema}";
+    private static final String SCHEMA_FILE_PATH_VAR = "${spring.graphql.location:classpath:schema.graphql}";
 
     ApplicationContext applicationContext;
 
