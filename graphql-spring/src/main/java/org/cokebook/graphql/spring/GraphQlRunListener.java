@@ -8,7 +8,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 /**
  * @date 2019/12/10 16:25
  */
-public class GraphQlRunListener implements SpringApplicationRunListener {
+public class GraphQlRunListener implements ApplicationRunListener, SpringApplicationRunListener {
 
     private SpringApplication springApplication;
     private String[] args;
@@ -42,6 +42,21 @@ public class GraphQlRunListener implements SpringApplicationRunListener {
 
     @Override
     public void finished(ConfigurableApplicationContext context, Throwable exception) {
+
+    }
+
+    @Override
+    public void started(ConfigurableApplicationContext context) {
+
+    }
+
+    @Override
+    public void running(ConfigurableApplicationContext context) {
+
+    }
+
+    @Override
+    public void failed(ConfigurableApplicationContext context, Throwable exception) {
 
     }
 }
