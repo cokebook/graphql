@@ -93,4 +93,4 @@ public class BookService {
 
 ## 4 特别说明
 
-- 由于 spring-boot 1.x 和 2.x 版本之间部分接口被调整, 而当前项目基于 1.x 版本构建, 所有如果你想支持 2.x 版本 则你需要调整一些 [GraphQlRunListener](./graphql-spring/src/main/java/org/cokebook/graphql/spring/GraphQlRunListener.java) 类.
+-  ~~由于 spring-boot 1.x 和 2.x 版本之间部分接口被调整, 而当前项目基于 1.x 版本构建, 所有如果你想支持 2.x 版本 则你需要调整一些 [GraphQlRunListener](./graphql-spring/src/main/java/org/cokebook/graphql/spring/GraphQlRunListener.java) 类.~~ `已支持`
