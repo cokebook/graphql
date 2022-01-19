@@ -60,10 +60,30 @@ public class BookService {
         return authorService.findAuthorById(book.getAuthorId());
     }
 
+    /**
+     * 演示使用 @Source 绑定当前 Source 对象
+     *
+     * @param book
+     * @param index
+     * @return
+     */
     @TypeWiring(type = "Book", field = "author_name")
     public String authorName(@Source Book book, int index) {
         // 测试样例
-        Author author = findByBook(book);
+        return authorName(book.getAuthorId(), index);
+    }
+
+    /**
+     * 演示使用 @Source 绑定当前 Source 对象特定属性
+     *
+     * @param authorId
+     * @param index
+     * @return
+     */
+    @TypeWiring(type = "Book", field = "author_name2")
+    public String authorName(@Source("authorId") String authorId, int index) {
+        // 测试样例
+        Author author = authorService.findAuthorById(authorId);
         if (author != null) {
             if (index == 1) {
                 return author.getFirstName();

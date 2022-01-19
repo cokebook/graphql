@@ -3,6 +3,7 @@ package org.cokebook.graphql.common;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -29,11 +30,9 @@ public class MethodParameterHelper {
      * @return
      */
     public static List<MethodParameter> getParams(Method method) {
-
         if (METHOD_PARAM_NAME_CACHE.containsKey(method)) {
             return METHOD_PARAM_NAME_CACHE.get(method);
         }
-
         METHOD_PARAM_NAME_CACHE.computeIfAbsent(method, new Function<Method, List<MethodParameter>>() {
             @Override
             public List<MethodParameter> apply(Method method) {
@@ -41,13 +40,7 @@ public class MethodParameterHelper {
                 final String[] candidateNames = PARAMETER_NAME_DISCOVERER.getParameterNames(method);
                 final MethodParameter[] methodParameters = new MethodParameter[parameters.length];
                 for (int i = 0; i < parameters.length; i++) {
-                    Param param = parameters[i].getAnnotation(Param.class);
-                    if (param == null) {
-                        Source source = parameters[i].getAnnotation(Source.class);
-                        if (source != null) {
-                            param = Source.class.getAnnotation(Param.class);
-                        }
-                    }
+                    final Param param = extract(parameters[i]);
                     String paramName = null;
                     if (param != null && param.value() != null) {
                         paramName = param.value();
@@ -63,4 +56,29 @@ public class MethodParameterHelper {
         });
         return METHOD_PARAM_NAME_CACHE.get(method);
     }
+
+    public static Param extract(Parameter parameter) {
+        Param param = parameter.getAnnotation(Param.class);
+        if (param == null) {
+            Source source = parameter.getAnnotation(Source.class);
+            if (source != null) {
+                Param sp = param = Source.class.getAnnotation(Param.class);
+                if (!Source.NO_PROP.equalsIgnoreCase(source.value())) {
+                    param = new Param() {
+                        @Override
+                        public String value() {
+                            return sp.value() + "." + source.value().trim();
+                        }
+
+                        @Override
+                        public Class<? extends Annotation> annotationType() {
+                            return Param.class;
+                        }
+                    };
+                }
+            }
+        }
+        return param;
+    }
+
 }

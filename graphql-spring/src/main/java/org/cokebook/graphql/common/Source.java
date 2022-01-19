@@ -13,4 +13,12 @@ import java.lang.annotation.*;
 @Param(Source.OBJECT_NAME)
 public @interface Source {
     String OBJECT_NAME = "-source-";
+    String NO_PROP = "";
+
+    /**
+     * 对象属性: 没有属性则表示使用整个对象
+     *
+     * @return
+     */
+    String value() default NO_PROP;
 }

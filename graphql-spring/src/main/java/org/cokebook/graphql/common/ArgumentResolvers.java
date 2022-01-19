@@ -1,6 +1,8 @@
 package org.cokebook.graphql.common;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPath;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.util.Map;
 import java.util.Objects;
@@ -28,8 +30,11 @@ public class ArgumentResolvers {
         if (parameter.hasAnnotation(JSON.class)) {
             return new JSONObject(context).toJavaObject(parameter.getType());
         }
-        Object pValue = context.get(parameter.getName());
-        if (pValue == null || parameter.getType().equals(pValue.getClass()) || parameter.getType().isAssignableFrom(pValue.getClass())) {
+        /* 判断是否为嵌套属性, 如果是基于 xPath 风格获取属性, 关于是否替换 json 工具问题以后在考虑如何更好的扩展 */
+        Object pValue = parameter.isNested() ? JSONPath.eval(context, "$." + parameter.getName())
+                : context.get(parameter.getName());
+        if (pValue == null || parameter.getType().equals(pValue.getClass())
+                || parameter.getType().isAssignableFrom(pValue.getClass())) {
             return pValue;
         }
         final TypeConverter<Object, Object> typeConverter = manager.get(pValue.getClass(), parameter.getType());

@@ -13,6 +13,7 @@ type Book {
     pageCount: Int
     author: Author
     author_name(index:Int) : String
+    author_name2(index:Int) : String
     createTime: Date
 }
 

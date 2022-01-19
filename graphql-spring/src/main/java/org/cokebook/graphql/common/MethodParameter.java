@@ -11,6 +11,8 @@ import java.lang.reflect.Parameter;
  */
 public class MethodParameter {
 
+    public static final String JSON_FIELD_DELIMITER = ".";
+
 
     private final Method method;
     private final Parameter parameter;
@@ -43,4 +45,9 @@ public class MethodParameter {
     public Class getType() {
         return type;
     }
+
+    public boolean isNested() {
+        return getName().indexOf(JSON_FIELD_DELIMITER) != -1;
+    }
+
 }
