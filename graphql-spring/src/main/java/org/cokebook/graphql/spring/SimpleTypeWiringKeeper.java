@@ -3,6 +3,7 @@ package org.cokebook.graphql.spring;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.TypeWiringDataFetcher;
 import org.cokebook.graphql.TypeWiringKeeper;
+import org.cokebook.graphql.TypeWirings;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.context.ApplicationContext;
@@ -27,8 +28,9 @@ public class SimpleTypeWiringKeeper extends InstantiationAwareBeanPostProcessorA
         if (!processedBeanNames.contains(beanName)) {
             processedBeanNames.add(beanName);
             ReflectionUtils.doWithMethods(beanClass, method -> {
-                if (method.getAnnotation(TypeWiring.class) != null) {
-                    BeanMethodDataFetcher dataFetcher = new BeanMethodDataFetcher(applicationContext, beanName, method);
+                TypeWiring typeWiring = TypeWirings.parse(method);
+                if (typeWiring != null) {
+                    BeanMethodDataFetcher dataFetcher = new BeanMethodDataFetcher(applicationContext, beanName, method, typeWiring);
                     TypeFieldPair<String, String> pair = TypeFieldPair.create(dataFetcher.getType(), dataFetcher.getField());
                     if (!pair.validate()) {
                         throw new IllegalStateException("@TypeWiring type and field can't be null. method = " + method);

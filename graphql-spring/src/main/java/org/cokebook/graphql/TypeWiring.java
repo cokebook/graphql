@@ -9,12 +9,25 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 public @interface TypeWiring {
 
-    String DEFAULT_TYPE = "Query";
+    /**
+     * 内置 Query 类型
+     */
+    String INNER_TYPE_QUERY = "Query";
 
-    String type() default DEFAULT_TYPE;
+    /**
+     * 内置 Mutation 类型
+     */
+    String INNER_TYPE_MUTATION = "Mutation";
+
+    /**
+     * 默认值 {@link #INNER_TYPE_QUERY}
+     *
+     * @return
+     */
+    String type() default INNER_TYPE_QUERY;
 
     String field();
 }

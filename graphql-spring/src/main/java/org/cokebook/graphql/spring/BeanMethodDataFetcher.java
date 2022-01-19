@@ -4,6 +4,7 @@ import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.TypeWiringDataFetcher;
+import org.cokebook.graphql.TypeWirings;
 import org.cokebook.graphql.common.ArgumentResolvers;
 import org.cokebook.graphql.common.MethodParameter;
 import org.cokebook.graphql.common.MethodParameterHelper;
@@ -28,10 +29,14 @@ public class BeanMethodDataFetcher implements TypeWiringDataFetcher {
     private TypeWiring typeWiring;
 
     public BeanMethodDataFetcher(ApplicationContext applicationContext, String beanName, Method method) {
+        this(applicationContext, beanName, method, TypeWirings.parse(method));
+    }
+
+    public BeanMethodDataFetcher(ApplicationContext applicationContext, String beanName, Method method, TypeWiring typeWiring) {
         this.applicationContext = applicationContext;
         this.beanName = beanName;
         this.method = method;
-        this.typeWiring = method.getAnnotation(TypeWiring.class);
+        this.typeWiring = typeWiring;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class BeanMethodDataFetcher implements TypeWiringDataFetcher {
     }
 
     private Object doGet(DataFetchingEnvironment environment, Object bean) throws IllegalAccessException, InvocationTargetException {
-        if (TypeWiring.DEFAULT_TYPE.equals(typeWiring.type())) {
+        if (TypeWiring.INNER_TYPE_QUERY.equals(typeWiring.type())) {
             final List<MethodParameter> parameters = MethodParameterHelper.getParams(method);
             final List<Object> pValues = parameters.stream().map(parameter -> {
                 return ArgumentResolvers.parse(environment.getArguments(), parameter);

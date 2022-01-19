@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class WelcomeDataFetcher implements TypeWiringDataFetcher {
     @Override
     public String getType() {
-        return TypeWiring.DEFAULT_TYPE;
+        return TypeWiring.INNER_TYPE_QUERY;
     }
 
     @Override

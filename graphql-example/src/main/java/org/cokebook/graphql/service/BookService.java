@@ -1,6 +1,7 @@
 package org.cokebook.graphql.service;
 
 
+import org.cokebook.graphql.Query;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.common.JSON;
 import org.cokebook.graphql.entity.Author;
@@ -21,13 +22,13 @@ public class BookService {
     private AuthorService authorService;
 
     private static List<Book> books = Arrays.asList(
-            new Book("book-1", "Harry Potter and the Philosopher's Stone", "223", "author-1"),
-            new Book("book-2", "Roma", "30", "author-2"),
-            new Book("book-3", "TLP", "10", "author-2"),
-            new Book("book-4", "BUSHI", "12", "author-3")
+            new Book("1", "Harry Potter and the Philosopher's Stone", "223", "author-1"),
+            new Book("2", "Roma", "30", "author-2"),
+            new Book("3", "TLP", "10", "author-2"),
+            new Book("4", "BUSHI", "12", "author-3")
     );
 
-    @TypeWiring(field = "book")
+    @Query("book")
     public Book findById(String id) {
         System.out.println("test to print current-thread:" + Thread.currentThread().getName() + ": book");
         return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
