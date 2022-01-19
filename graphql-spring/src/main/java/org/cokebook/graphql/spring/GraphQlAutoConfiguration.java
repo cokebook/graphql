@@ -4,7 +4,7 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.cokebook.graphql.GraphQLAdapter;
 import org.cokebook.graphql.TypeWiringKeeper;
-import org.cokebook.graphql.controller.GraphQlControllerRegister;
+import org.cokebook.graphql.register.GraphQlControllerRegister;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;

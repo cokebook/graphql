@@ -1,4 +1,4 @@
-package org.cokebook.graphql.controller;
+package org.cokebook.graphql.register;
 
 import com.google.common.collect.Maps;
 import graphql.ExecutionResult;
