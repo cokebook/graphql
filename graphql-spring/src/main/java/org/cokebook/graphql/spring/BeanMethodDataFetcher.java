@@ -8,13 +8,15 @@ import org.cokebook.graphql.TypeWirings;
 import org.cokebook.graphql.common.ArgumentResolvers;
 import org.cokebook.graphql.common.MethodParameter;
 import org.cokebook.graphql.common.MethodParameterHelper;
+import org.cokebook.graphql.common.Source;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class BeanMethodDataFetcher implements TypeWiringDataFetcher {
+
+    public static final String ENV_CONTEXT_SOURCE_TAG_NAME = "source";
 
     private ApplicationContext applicationContext;
     private String beanName;
@@ -67,17 +71,20 @@ public class BeanMethodDataFetcher implements TypeWiringDataFetcher {
     }
 
     private Object doGet(DataFetchingEnvironment environment, Object bean) throws IllegalAccessException, InvocationTargetException {
-        if (TypeWiring.INNER_TYPE_QUERY.equals(typeWiring.type())) {
-            final List<MethodParameter> parameters = MethodParameterHelper.getParams(method);
-            final List<Object> pValues = parameters.stream().map(parameter -> {
-                return ArgumentResolvers.parse(environment.getArguments(), parameter);
-            }).collect(Collectors.toList());
-            return method.invoke(bean, pValues.toArray(new Object[pValues.size()]));
-        }
-        return method.invoke(bean, (Object) environment.getSource());
+        final List<MethodParameter> parameters = MethodParameterHelper.getParams(method);
+        final List<Object> pValues = parameters.stream().map(parameter -> {
+            return ArgumentResolvers.parse(bindSourceContext(environment), parameter);
+        }).collect(Collectors.toList());
+        return method.invoke(bean, pValues.toArray(new Object[pValues.size()]));
     }
 
     public Method getMethod() {
         return method;
+    }
+
+    public static Map<String, Object> bindSourceContext(DataFetchingEnvironment environment) {
+        Map<String, Object> context = new HashMap<>(environment.getArguments());
+        context.put(Source.OBJECT_NAME, environment.getSource());
+        return context;
     }
 }

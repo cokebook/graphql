@@ -4,6 +4,8 @@ package org.cokebook.graphql.service;
 import org.cokebook.graphql.Query;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.common.JSON;
+import org.cokebook.graphql.common.Param;
+import org.cokebook.graphql.common.Source;
 import org.cokebook.graphql.entity.Author;
 import org.cokebook.graphql.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,8 @@ public class BookService {
     );
 
     @Query("book")
-    public Book findById(String id) {
-        System.out.println("test to print current-thread:" + Thread.currentThread().getName() + ": book");
+    public Book findById(@Param("id") String id) {
+        System.out.println("test to print current-thread:" + Thread.currentThread().getName() + ": book + id = " + id);
         return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
     }
 
@@ -54,8 +56,22 @@ public class BookService {
     }
 
     @TypeWiring(type = "Book", field = "author")
-    public Author findByBook(Book book) {
+    public Author findByBook(@Source Book book) {
         return authorService.findAuthorById(book.getAuthorId());
+    }
+
+    @TypeWiring(type = "Book", field = "author_name")
+    public String authorName(@Source Book book, int index) {
+        // 测试样例
+        Author author = findByBook(book);
+        if (author != null) {
+            if (index == 1) {
+                return author.getFirstName();
+            } else if (index == 2) {
+                return author.getLastName();
+            }
+        }
+        return String.valueOf("index = " + index);
     }
 
     public static class BookQueryParam {
@@ -70,31 +86,4 @@ public class BookService {
         }
     }
 
-    public static void main(String[] args) {
-
-        Map<String, String> paramType = new HashMap<>();
-        paramType.put("assetId", "long");
-        paramType.put("cardId", "long");
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("cardId", 100L);
-        params.put("assetId", 100L);
-
-
-        String BOOK_INFO = "assert(id:$id){\n" +
-                "        name\n" +
-                "        createTime\n" +
-                "    \n" +
-                "    }";
-        String BOOKS = "  card(id:$id) {\n" +
-                "            name\n" +
-                "        createTime\n" +
-                "    }\n";
-
-
-        String query = "query asset_card ($cardId:long, $asserttId:long) {" + BOOK_INFO + BOOKS + "}";
-
-        System.out.println(query);
-
-    }
 }

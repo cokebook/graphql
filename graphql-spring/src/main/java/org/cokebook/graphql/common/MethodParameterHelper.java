@@ -42,6 +42,12 @@ public class MethodParameterHelper {
                 final MethodParameter[] methodParameters = new MethodParameter[parameters.length];
                 for (int i = 0; i < parameters.length; i++) {
                     Param param = parameters[i].getAnnotation(Param.class);
+                    if (param == null) {
+                        Source source = parameters[i].getAnnotation(Source.class);
+                        if (source != null) {
+                            param = Source.class.getAnnotation(Param.class);
+                        }
+                    }
                     String paramName = null;
                     if (param != null && param.value() != null) {
                         paramName = param.value();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -48,6 +49,10 @@ public class GraphQlControllerRegister {
 
         public WebApi.Response doQuery(Query query, Map<String, Object> params) {
             Map<String, Object> variables = Maps.filterKeys(params, key -> !QUERY_PARAM_NAME.equalsIgnoreCase(key));
+            /* 合并 请求参数和 query 自带查询参数: 并设置 Query 自带查询参数优先级更高 */
+            for (Map.Entry<String, Object> var : query.getVariables().entrySet()) {
+                variables.put(var.getKey(), var.getValue());
+            }
             ExecutionResult result = graphQl.execute(query.getQuery(), variables);
             if (!result.getErrors().isEmpty()) {
                 log.info("graphQL query errors = {}", result.getErrors());
@@ -66,6 +71,8 @@ public class GraphQlControllerRegister {
 
             private String query;
 
+            private Map<String, Object> variables = new HashMap<>(4);
+
             public Query() {
             }
 
@@ -79,6 +86,14 @@ public class GraphQlControllerRegister {
 
             public void setQuery(String query) {
                 this.query = query;
+            }
+
+            public Map<String, Object> getVariables() {
+                return variables;
+            }
+
+            public void setVariables(Map<String, Object> variables) {
+                this.variables = variables;
             }
         }
     }
