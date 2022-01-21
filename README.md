@@ -12,7 +12,7 @@
 
 - 定义你的 graphql schema  
 
-    > 将 graphql-example/resources/graphql.schema 样例文件
+    > 将 graphql-example/resources/schema.graphql 样例文件
 
 - 2 声明 Bean 的方法为TypeWiring :
 
@@ -30,7 +30,7 @@ public class BookService {
             new Book("book-3", "TLP", "10", "author-2"),
             new Book("book-4", "BUSHI", "12", "author-3")
     );
-
+    // 作为查询的简写方案可以直接使用  @Query("book") 替代
     @TypeWiring(field = "book")
     public Book findById(@Param("id") String id) {
         return books.stream().filter(book -> book.getId().equals(id)).findFirst().orElse(null);
@@ -46,36 +46,37 @@ public class BookService {
 
 - 4 启动应用, 使用命令查询 :
 
-    > 系统即支持 POST 也支持 GET 方式.
+**1 使用通用风格查询模式**
 
-```bash
-    curl -X POST \
-      http://localhost:8080/graphql/instruction \
-      -H 'cache-control: no-cache' \
-      -H 'content-type: application/json' \
-      -H 'postman-token: d3cef612-06b1-b0c3-caef-31639d1f8dc5' \
-      -d '{
-    	
-    	book(id:"book-1") {
-    		id
-    		name
-    	}
-    	
-    }'
+```shell script
+
+curl -L -X GET 'http://localhost:8080/graphql' \
+-H 'Content-Type: application/json' \
+--data-raw '{"query":"query test($id:ID) {\n  \n  book(id:$id) { name, id} \n\n}","variables":{"id":"2","index":1}}'
+
+
+```
+
+**2 使用 Url 参数模式查询**
+
+```shell script
+
+curl -L -X GET 'http://localhost:8080/graphql/query?q=query%20test($id:ID)%20%7B%20book(id:$id)%20%7B%20name,%20id%7D%20%7D&id=2'
+
 ```
 
 - 5 结果演示
 
 ```json
     {
-      "code": 0,
-      "message": null,
-      "data": {
-        "book": {
-          "id": "book-1",
-          "name": "Harry Potter and the Philosopher's Stone"
+        "code": 0,
+        "message": null,
+        "data": {
+            "book": {
+                "name": "Roma",
+                "id": "2"
+            }
         }
-      }
     }
 ```
 
@@ -83,7 +84,7 @@ public class BookService {
 
 - 你可以直接下载本项目运行 graphql-example 模块演示系统结果作为学习素材. [点击跳转到样例](./graphql-example)
 
-- 如果你想使用非 @TypeWiring 注解声明 DataFetcher, 你可以使用常规 Spring bean 模式定义 DataFetcher [点击跳转到样例](./graphql-example/src/main/java/org/cokebook/graphql/fetcher/WelcomeDataFetcher.java)    
+- 如果你想使用非 @TypeWiring 以及@Query / @Mutation 快捷注解声明 DataFetcher, 你可以使用常规 Spring bean 模式定义 DataFetcher [点击跳转到样例](./graphql-example/src/main/java/org/cokebook/graphql/fetcher/WelcomeDataFetcher.java)    
     
 ## 3 参考文档
 
