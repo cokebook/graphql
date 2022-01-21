@@ -7,6 +7,13 @@ type Query  {
     index : String
 }
 
+type Mutation {
+
+    createBook(name:String):Book
+    createAuthor(name:String):Author
+
+}
+
 type Book {
     id: ID
     name: String

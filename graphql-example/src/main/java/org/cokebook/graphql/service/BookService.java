@@ -1,6 +1,7 @@
 package org.cokebook.graphql.service;
 
 
+import org.cokebook.graphql.Mutation;
 import org.cokebook.graphql.Query;
 import org.cokebook.graphql.TypeWiring;
 import org.cokebook.graphql.common.JSON;
@@ -11,6 +12,7 @@ import org.cokebook.graphql.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,11 +25,12 @@ public class BookService {
     @Autowired
     private AuthorService authorService;
 
-    private static List<Book> books = Arrays.asList(
+    private static List<Book> books = new ArrayList<>(Arrays.asList(
             new Book("1", "Harry Potter and the Philosopher's Stone", "223", "author-1"),
             new Book("2", "Roma", "30", "author-2"),
             new Book("3", "TLP", "10", "author-2"),
             new Book("4", "BUSHI", "12", "author-3")
+    )
     );
 
     @Query("book")
@@ -93,6 +96,15 @@ public class BookService {
         }
         return String.valueOf("index = " + index);
     }
+
+
+    @Mutation("createBook")
+    public Book create() {
+        Book book = new Book(System.currentTimeMillis() + "-" + "1", "Harry Potter and the Philosopher's Stone", "223", "author-1");
+        books.add(book);
+        return book;
+    }
+
 
     public static class BookQueryParam {
         private String[] names;

@@ -39,23 +39,23 @@ public class GraphQlControllerRegister {
 
         @RequestMapping(value = "/query", method = {RequestMethod.GET, RequestMethod.POST})
         public WebApi.Response query(@RequestParam("q") String query, HttpServletRequest request) {
-            return doQuery(new Query(query), getParams(request));
+            return exec(new Instruction(query), getParams(request));
         }
 
-        @RequestMapping(method = {RequestMethod.GET})
-        public WebApi.Response query2(@RequestBody Query query, HttpServletRequest request) {
-            return doQuery(query, getParams(request));
+        @RequestMapping
+        public WebApi.Response exec(@RequestBody Instruction instruction, HttpServletRequest request) {
+            return exec(instruction, getParams(request));
         }
 
-        public WebApi.Response doQuery(Query query, Map<String, Object> params) {
+        public WebApi.Response exec(Instruction instruction, Map<String, Object> params) {
             Map<String, Object> variables = Maps.filterKeys(params, key -> !QUERY_PARAM_NAME.equalsIgnoreCase(key));
             /* 合并 请求参数和 query 自带查询参数: 并设置 Query 自带查询参数优先级更高 */
-            for (Map.Entry<String, Object> var : query.getVariables().entrySet()) {
+            for (Map.Entry<String, Object> var : instruction.getVariables().entrySet()) {
                 variables.put(var.getKey(), var.getValue());
             }
-            ExecutionResult result = graphQl.execute(query.getQuery(), variables);
+            ExecutionResult result = graphQl.execute(instruction.getQuery(), variables);
             if (!result.getErrors().isEmpty()) {
-                log.info("graphQL query errors = {}", result.getErrors());
+                log.info("GraphQL instruction errors = {}", result.getErrors());
                 final StringBuilder errors = new StringBuilder();
                 for (GraphQLError error : result.getErrors()) {
                     errors.append(error.getMessage());
@@ -67,16 +67,16 @@ public class GraphQlControllerRegister {
         }
 
 
-        public static class Query {
+        public static class Instruction {
 
             private String query;
 
             private Map<String, Object> variables = new HashMap<>(4);
 
-            public Query() {
+            public Instruction() {
             }
 
-            public Query(String query) {
+            public Instruction(String query) {
                 this.query = query;
             }
 

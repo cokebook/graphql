@@ -50,7 +50,7 @@ public class BookService {
 
 ```bash
     curl -X POST \
-      http://localhost:8080/graphql/query \
+      http://localhost:8080/graphql/instruction \
       -H 'cache-control: no-cache' \
       -H 'content-type: application/json' \
       -H 'postman-token: d3cef612-06b1-b0c3-caef-31639d1f8dc5' \
@@ -94,4 +94,4 @@ public class BookService {
 ## 4 特别说明
 
 -  ~~由于 spring-boot 1.x 和 2.x 版本之间部分接口被调整, 而当前项目基于 1.x 版本构建, 所有如果你想支持 2.x 版本 则你需要调整一些 [GraphQlRunListener](./graphql-spring/src/main/java/org/cokebook/graphql/spring/GraphQlRunListener.java) 类.~~ `已支持`
--  考虑我使用的场景 目前主要集中开发针对查询的场景, 后续会考虑支持变更场景
+-  ~~考虑我使用的场景 目前主要集中开发针对查询的场景, 后续会考虑支持变更场景~~ `已支持`
