@@ -1,13 +1,12 @@
 package org.cokebook.graphql.entity;
 
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @date 2019/11/28 17:44
  */
-@Data
+
 public class Book {
 
     public Book(String id, String name, String pageCount, String authorId) {

@@ -1,11 +1,10 @@
 package org.cokebook.graphql.entity;
 
-import lombok.Data;
 
 /**
  * @date 2019/11/28 17:45
  */
-@Data
+
 public class Author {
     public Author(String id, String firstName, String lastName) {
         this.id = id;
